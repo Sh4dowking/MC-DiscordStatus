@@ -10,9 +10,10 @@ A lightweight Minecraft plugin that allows you to display and monitor your Minec
 
 ## 📦 Installation
 1. Download the latest release from the [Releases](https://github.com/Sh4dowking/MC-DiscordStatus/releases) page.  
-2. Place the `.jar` file into your Minecraft Server’s `plugins` folder. 
-3. Open `plugins/MC-DiscordStatus/config.yml` and edit it with your bot and server details (See Configuration below) 
-4. Restart your Minecraft server.
+2. Place the `.jar` file into your Minecraft Server’s `plugins` folder.
+3. Start the Minecraft Server.
+4. Open `plugins/MC-DiscordStatus/config.yml` and edit it with your bot and server details (See Configuration below) 
+5. Restart your Minecraft server.
 
 ---
 
