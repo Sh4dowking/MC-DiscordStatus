@@ -4,4 +4,6 @@ target/
 *.jar
 .idea/
 *.iml
+commitmsg.txt
 .vscode/
+dependency-reduced-pom.xml
