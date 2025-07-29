@@ -2,7 +2,3 @@ name: DiscordBot
 version: 1.0
 main: com.sh4dowking.discordbot.DiscordBot
 api-version: 1.21
-commands:
-  hello:
-    description: Says hello
-    usage: /<command>

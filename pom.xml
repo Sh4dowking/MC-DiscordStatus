@@ -17,11 +17,19 @@
     </properties>
 
     <dependencies>
+        <!-- Paper API (provided at runtime by the server) -->
         <dependency>
             <groupId>io.papermc.paper</groupId>
             <artifactId>paper-api</artifactId>
             <version>1.21.1-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
+        </dependency>
+
+        <!-- JDA (must be shaded into the jar) -->
+        <dependency>
+            <groupId>net.dv8tion</groupId>
+            <artifactId>JDA</artifactId>
+            <version>5.0.0-beta.24</version>
         </dependency>
     </dependencies>
 
@@ -29,6 +37,10 @@
         <repository>
             <id>papermc-repo</id>
             <url>https://repo.papermc.io/repository/maven-public/</url>
+        </repository>
+        <repository>
+            <id>dv8tion</id>
+            <url>https://m2.dv8tion.net/releases</url>
         </repository>
     </repositories>
 
@@ -44,6 +56,31 @@
                     <target>17</target>
                 </configuration>
             </plugin>
+
+            <!-- Shade JDA into the final jar -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.5.0</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <!-- Relocate packages to avoid conflicts -->
+                            <relocations>
+                                <relocation>
+                                    <pattern>net.dv8tion</pattern>
+                                    <shadedPattern>com.sh4dowking.discordbot.libs.net.dv8tion</shadedPattern>
+                                </relocation>
+                            </relocations>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
             <!-- Build directly into plugins folder -->
             <plugin>
                 <artifactId>maven-jar-plugin</artifactId>
