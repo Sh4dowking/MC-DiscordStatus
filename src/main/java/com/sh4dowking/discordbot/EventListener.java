@@ -12,33 +12,60 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 
 public class EventListener implements Listener {
+    private final DiscordBot plugin;
     private final JDA jda;
-    private final HashMap<String, String> configKeys;
     private final TextChannel updatesChannel;
     private final HashSet<Player> players;
+    private final Dictionary dictionary;
+    private final DiscordNotifier discordNotifier;
 
-
-    public EventListener(DiscordBot plugin) {
-        this.jda = plugin.getJda();
-        this.configKeys = plugin.getConfigKeys();
-        this.updatesChannel = jda.getTextChannelById(configKeys.get("updatesChannelID"));
+    public EventListener(DiscordBot plugin, DiscordManager discordManager) {
+        this.plugin = plugin;
+        this.dictionary = plugin.getDictionary();
+        this.discordNotifier = discordManager.getDiscordNotifier();
+        this.jda = discordManager.getJda();
         this.players = new HashSet<>();
+        this.updatesChannel = jda.getTextChannelById(dictionary.getString("updatesChannelID"));
     }
 
     @EventHandler
-    public void onPlayerJoin(PlayerJoinEvent event) {
-        Player player = event.getPlayer();
-        players.add(player);
-        String joinMessage = configKeys.get("joinMessage").replace("{player}", player.getName());
-        updatesChannel.sendMessage(joinMessage).queue();
-        
+    private void onPlayerJoin(PlayerJoinEvent event) {
+        handlePlayerEvent(
+            event.getPlayer(),
+            true, // joining
+            "sendJoinMessage",
+            "joinMessage",
+            true
+        );
+        handleEmbed(true);
     }
 
     @EventHandler
-    public void onPlayerQuit(PlayerQuitEvent event) {
-        Player player = event.getPlayer();
-        players.remove(player);
-        String leaveMessage = configKeys.get("leaveMessage").replace("{player}", player.getName());
-        updatesChannel.sendMessage(leaveMessage).queue();
+    private void onPlayerQuit(PlayerQuitEvent event) {
+        handlePlayerEvent(
+            event.getPlayer(),
+            false, // leaving
+            "sendLeaveMessage",
+            "leaveMessage",
+            true 
+        );
+        handleEmbed(false);
     }
+
+    private void handlePlayerEvent(Player player, boolean joining, String toggleKey, String messageKey, boolean updateEmbed) {
+        if(!dictionary.getBoolean(toggleKey)) return;
+
+        if(joining){
+            players.add(player);
+        } else {
+            players.remove(player);
+        }
+        String message = dictionary.getString(messageKey).replace("{player}", player.getName());
+        discordNotifier.sendMessage(updatesChannel,message);
+    }
+
+    private void handleEmbed(boolean joining){
+        discordNotifier.updateEmbed();   
+    }
+
 }
