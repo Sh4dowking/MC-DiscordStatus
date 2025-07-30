@@ -36,8 +36,8 @@ leaveMessage: "{player} has left the Server!"
 
 | Command                    | Description                     | 
 |----------------------------|---------------------------------|
-| /setjoinmessage <message>  | Sets a new join message         | 
-| /setleavemessage <message> | Sets a new join message         | 
+| /setjoinmessage `<message>`  | Sets a new join message         | 
+| /setleavemessage `<message>` | Sets a new join message         | 
 | /getjoinmessage            | Shows the current join message  | 
 | /getleavemessage           | Shows the current leave message | 
 
