@@ -1,23 +1,24 @@
-package com.sh4dowking.discordbot;
+package com.sh4dowking.discordbot.Discord;
+
+import com.sh4dowking.discordbot.Dictionary;
 
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
-import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
+import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 
 public class DiscordManager{
-    private final DiscordBot plugin;
     private final Dictionary dictionary;
     private JDA jda;
     private Guild guild;
     private DiscordNotifier discordNotifier;
 
-    public DiscordManager(DiscordBot plugin){
-        this.plugin = plugin;
-        this.dictionary = plugin.getDictionary();
+
+    public DiscordManager(Dictionary dictionary){
+        this.dictionary = dictionary;
     }
 
     private boolean initializeDiscordBot(){
@@ -25,12 +26,12 @@ public class DiscordManager{
             String discordToken = dictionary.getString("discordToken");
             this.jda = JDABuilder.createDefault(discordToken).build();
             jda.awaitReady();
-            this.discordNotifier = new DiscordNotifier(this);
+            this.discordNotifier = new DiscordNotifier(this, dictionary);
             // Initialize Discord Command Listener for specific Server
             String discordServerID = dictionary.getString("discordServerID");
             this.guild = jda.getGuildById(discordServerID);
             initializeDiscordCommands();
-            jda.addEventListener(new DiscordCommandListener(this));
+            jda.addEventListener(new DiscordCommandListener(dictionary));
 
         } catch (InterruptedException e) {
             return false;
@@ -65,10 +66,6 @@ public class DiscordManager{
     // Getters
     public boolean discordSetupWasSuccessful() {
         return initializeDiscordBot();
-    }
-
-    public Dictionary getDictionary(){
-        return this.dictionary;
     }
 
     public JDA getJda() {

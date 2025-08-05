@@ -1,20 +1,21 @@
-package com.sh4dowking.discordbot;
+package com.sh4dowking.discordbot.Discord;
+
+import com.sh4dowking.discordbot.Dictionary;
 
 import net.dv8tion.jda.api.JDA;
-import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 
 public class DiscordNotifier {
-    private Dictionary dictionary;
+    private final Dictionary dictionary;
     private final DiscordManager discordManager;
-    private JDA jda;
+    private final JDA jda;
     private final EmbedManager embedManager;
     private final TextChannel updatesChannel;
 
-    public DiscordNotifier(DiscordManager discordManager) {
+    public DiscordNotifier(DiscordManager discordManager, Dictionary dictionary) {
         this.discordManager = discordManager;
         this.jda = discordManager.getJda();
-        this.dictionary = discordManager.getDictionary();
+        this.dictionary = dictionary;
         String updatesChannelID = dictionary.getString("updatesChannelID");
         this.updatesChannel = jda.getTextChannelById(updatesChannelID);
         String statusChannelID = dictionary.getString("statusChannelID");
@@ -37,5 +38,9 @@ public class DiscordNotifier {
 
     public Dictionary getDictionary() {
         return this.dictionary;
+    }
+
+    public void serverCrashed(Throwable throwable) {
+        embedManager.sendServerCrashMessage(throwable);
     }
 }

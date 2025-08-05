@@ -1,10 +1,17 @@
 package com.sh4dowking.discordbot;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
 
 public class Dictionary {
     private final DiscordBot plugin;
     private HashMap<String, Object> configKeys;
+    private HashSet<Player> players = new HashSet<>();
+    private int maxPlayers;
+    private boolean serverOnline;
 
     public Dictionary(DiscordBot plugin) {
         this.plugin = plugin;
@@ -46,6 +53,25 @@ public class Dictionary {
         plugin.saveConfig();
     }
 
+    public void setMaxPlayers(int maxPlayers) {
+        this.maxPlayers = maxPlayers;
+    }
+
+    public void addPlayer(Player player) {
+        players.add(player);
+    }
+
+    public void removePlayer(Player player) {
+        players.remove(player);
+    }
+
+    public void setServerStatus(boolean online) {
+        this.serverOnline = online;
+        if (!online) {
+            players.clear(); // Clear players when server goes offline
+        }
+    }
+
     // Getters
     public String getString(String key) {
         Object val = configKeys.get(key);
@@ -64,10 +90,22 @@ public class Dictionary {
         } else if (val instanceof String) {
             return Boolean.parseBoolean((String) val);
         }
-        return false; // default fallback
+        return false;
     }
 
     public boolean hasValidConfigKeys() {
         return getValidConfigKeys();
+    }
+
+    public HashSet<Player> getOnlinePlayers() {
+        return players;
+    }
+
+    public int getMaxPlayers() {
+        return maxPlayers;
+    }
+
+    public boolean isServerOnline() {
+        return serverOnline;
     }
 }

@@ -1,9 +1,8 @@
-discordToken: "your-discord-token-here"
-discordServerID: "your-discord-server-id-here"
-updatesChannelID: "your-updates-channel-id-here"
-statusChannelID: "your-embed-channel-id-here"
-statusMessageID: "your-embed-message-id-here"
-
+discordToken: "YOUR_BOT_TOKEN"
+discordServerID: "YOUR_DISCORD_SERVER_ID"
+updatesChannelID: "YOUR_DISCORD_CHANNEL_ID"
+statusChannelID: "YOUR_STATUS_CHANNEL_ID"
+statusMessageID: "YOUR_STATUS_MESSAGE_ID"
 sendJoinMessage: true
 sendLeaveMessage: true
 joinMessage: "`{player}` joined the Server!"

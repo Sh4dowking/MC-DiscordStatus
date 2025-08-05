@@ -1,15 +1,15 @@
-package com.sh4dowking.discordbot;
+package com.sh4dowking.discordbot.Discord;
+
+import com.sh4dowking.discordbot.Dictionary;
 
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
 public class DiscordCommandListener extends ListenerAdapter {
-    private final DiscordManager discordManager;
     private final Dictionary dictionary;
 
-    public DiscordCommandListener(DiscordManager discordManager) {
-        this.discordManager = discordManager;
-        this.dictionary = discordManager.getDictionary();
+    public DiscordCommandListener(Dictionary dictionary) {
+        this.dictionary = dictionary;
     }
     
     @Override
