@@ -34,9 +34,10 @@ public class DiscordBot extends JavaPlugin {
         
         // Intialize Minecraft Event Listener
         getServer().getPluginManager().registerEvents(new EventListener(this.dictionary, this.discordManager), this);
-        dictionary.setServerStatus(true); // Set server status to online
+        dictionary.setServerStatus(true);
         discordManager.getDiscordNotifier().updateEmbed();
 
+        // Server Crash Handler
         Thread.setDefaultUncaughtExceptionHandler((thread, throwable) -> {
             discordManager.getDiscordNotifier().serverCrashed(throwable);
         });
@@ -44,8 +45,9 @@ public class DiscordBot extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        dictionary.setServerStatus(false); // Set server status to offline
-        discordManager.getDiscordNotifier().updateEmbed(); // Update embed before shutdown
+        // Set server status to offline
+        dictionary.setServerStatus(false);
+        discordManager.getDiscordNotifier().updateEmbed();
         getLogger().info("DiscordBot plugin is disabled!");
     }
 }

@@ -23,6 +23,7 @@ public class Dictionary {
     private String motd;
     private File serverIconFile;
     private DiscordManager discordManager;
+    private String version;
 
     public Dictionary(DiscordBot plugin) {
         this.plugin = plugin;
@@ -34,6 +35,7 @@ public class Dictionary {
     private void initializeStaticValues(){
         this.maxPlayers = plugin.getServer().getMaxPlayers();
         this.motd = plugin.getServer().getMotd();
+        this.version = plugin.getServer().getMinecraftVersion();
         configureServerIcon();
     }
 
@@ -169,5 +171,9 @@ public class Dictionary {
 
     public DiscordManager getDiscordManager() {
         return discordManager;
+    }
+
+    public String getServerVersion() {
+        return version;
     }
 }

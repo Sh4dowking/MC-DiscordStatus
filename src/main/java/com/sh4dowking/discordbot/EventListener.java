@@ -4,6 +4,7 @@ import java.util.HashSet;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
@@ -55,6 +56,14 @@ public class EventListener implements Listener {
             true 
         );
         handleEmbed();
+    }
+
+    @EventHandler
+    public void onPlayerChat(AsyncPlayerChatEvent event) {
+        Player player = event.getPlayer();
+        String message = event.getMessage();
+        String discordMessage = "`" + player.getName() + "` " + message;
+        discordNotifier.sendMessage(updatesChannel, discordMessage);
     }
 
     private void handlePlayerEvent(Player player, boolean joining, String toggleKey, String messageKey, boolean updateEmbed) {

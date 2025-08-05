@@ -75,23 +75,24 @@ public class EmbedManager {
 
     private void createEmbedMessage() {
         embed.clear();
-        if(dictionary.isServerOnline()) {
-            serverIsOnline();
-        } else {
-            serverIsOffline();
-        }
-        embed.setFooter("Status Updated");
-        embed.setTimestamp(Instant.now());
-    }
-
-    private void fillEmbed(){
         embed.setThumbnail("attachment://server-icon.png");
         embed.addField("Message of the Day", dictionary.getMotd(), false);
-        HashSet<Player> players = dictionary.getOnlinePlayers();
-        int maxPlayers = dictionary.getMaxPlayers();
-        embed.addField("Players Online", String.valueOf(players.size()), false);
-        embed.addField("Max Players", String.valueOf(maxPlayers), false);
-        createOnlinePlayerList();
+        if(dictionary.isServerOnline()) {
+            embed.setColor(Color.GREEN);
+            embed.setTitle("🟢 Server is Online");
+            embed.setDescription("The Minecraft server is currently online and operational.");
+            HashSet<Player> players = dictionary.getOnlinePlayers();
+            int maxPlayers = dictionary.getMaxPlayers();
+            embed.addField("Players Online", String.valueOf(players.size())+"/"+String.valueOf(maxPlayers), false);
+            createOnlinePlayerList();
+        } else {
+            embed.setColor(Color.RED);
+            embed.setTitle("🔴 Server is Offline");
+            embed.setDescription("The Minecraft server is currently offline. Please check again later.");
+        }
+        embed.addField("Server Version", "`"+dictionary.getServerVersion()+"`", false);
+        embed.setFooter("Status Updated");
+        embed.setTimestamp(Instant.now());
     }
     
     private void createOnlinePlayerList(){
@@ -113,20 +114,6 @@ public class EmbedManager {
             }
             embed.addField("Player List", playerList, false);
         }
-    }
-
-    private void serverIsOnline() {
-        embed.setColor(Color.GREEN);
-        embed.setTitle("🟢 Server is Online");
-        embed.setDescription("The Minecraft server is currently online and operational.");
-        fillEmbed();
-    }
-
-    private void serverIsOffline() {
-        embed.setColor(Color.RED);
-        embed.setTitle("🔴 Server is Offline");
-        embed.setDescription("The Minecraft server is currently offline. Please check again later.");
-        fillEmbed();
     }
 
     public void sendServerCrashMessage(Throwable throwable) {
