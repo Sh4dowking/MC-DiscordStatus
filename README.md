@@ -18,7 +18,7 @@ discordToken: "YOUR_BOT_TOKEN"
 discordServerID: "YOUR_DISCORD_SERVER_ID"
 updatesChannelID: "DISCORD_CHANNEL_ID"
 ```
-For further configuration and setup help refer to the official [documentation](sh4dowking.github.io/docs/discordstatus/) website.
+For further configuration and setup help refer to the official [documentation](https://sh4dowking.github.io/docs/discordstatus/) website.
 
 ## 🛠️ Building from Source
 If you want to compile the plugin yourself:
