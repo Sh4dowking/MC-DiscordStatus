@@ -1,6 +1,5 @@
 # MC-DiscordStatus
 A lightweight Minecraft plugin that allows you to display and monitor your Minecraft Server status directly on Discord through a dedicated Discord Bot.
----
 
 ## ✨ Features
 - TODO
@@ -13,7 +12,13 @@ A lightweight Minecraft plugin that allows you to display and monitor your Minec
 5. Restart the Minecraft server.
 
 ## ⚙️ Configuration
-For further configuration refer to the official [documentation](sh4dowking.github.io) website.
+Example `config.yml`:
+```yaml
+discordToken: "YOUR_BOT_TOKEN"
+discordServerID: "YOUR_DISCORD_SERVER_ID"
+updatesChannelID: "DISCORD_CHANNEL_ID"
+```
+For further configuration and setup help refer to the official [documentation](sh4dowking.github.io) website.
 
 ## 🛠️ Building from Source
 If you want to compile the plugin yourself:
