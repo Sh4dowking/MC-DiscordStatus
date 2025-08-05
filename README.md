@@ -1,12 +1,9 @@
 # MC-DiscordStatus
 A lightweight Minecraft plugin that allows you to display and monitor your Minecraft Server status directly on Discord through a dedicated Discord Bot.
-
 ---
 
 ## ✨ Features
 - TODO
-
----
 
 ## 📦 Installation
 1. Download the latest release from the [Releases](https://github.com/Sh4dowking/MC-DiscordStatus/releases) page.  
@@ -14,6 +11,9 @@ A lightweight Minecraft plugin that allows you to display and monitor your Minec
 3. Start the Minecraft Server.
 4. Open `plugins/MC-DiscordStatus/config.yml` and edit it with your bot and server details (See Configuration below) 
 5. Restart the Minecraft server.
+
+## ⚙️ Configuration
+For further configuration refer to the official [documentation](sh4dowking.github.io) website.
 
 ## 🛠️ Building from Source
 If you want to compile the plugin yourself:
