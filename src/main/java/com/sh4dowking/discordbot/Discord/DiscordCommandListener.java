@@ -1,15 +1,17 @@
 package com.sh4dowking.discordbot.Discord;
 
-import com.sh4dowking.discordbot.Dictionary;
+import com.util.Dictionary;
 
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
 public class DiscordCommandListener extends ListenerAdapter {
     private final Dictionary dictionary;
+    private final DiscordManager discordManager;
 
     public DiscordCommandListener(Dictionary dictionary) {
         this.dictionary = dictionary;
+        this.discordManager = dictionary.getDiscordManager();
     }
     
     @Override
@@ -28,6 +30,11 @@ public class DiscordCommandListener extends ListenerAdapter {
             case "togglejoinmessage", "toggleleavemessage" -> {
                 String key = eventName.equals("togglejoinmessage") ? "sendJoinMessage" : "sendLeaveMessage";
                 toggleMessage(key, event);
+            }
+            case "togglestatus" -> {
+                dictionary.configureServerIcon();
+                discordManager.getDiscordNotifier().refreshEmbed();
+                event.reply("Status embed refreshed!").queue();
             }
             default -> event.reply("Unknown command!").setEphemeral(true).queue();
         }

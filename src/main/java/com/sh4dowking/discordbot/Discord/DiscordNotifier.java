@@ -1,6 +1,6 @@
 package com.sh4dowking.discordbot.Discord;
 
-import com.sh4dowking.discordbot.Dictionary;
+import com.util.Dictionary;
 
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
@@ -30,6 +30,10 @@ public class DiscordNotifier {
 
     public void updateEmbed() {
         embedManager.updateStatusEmbed();
+    }
+
+    public void refreshEmbed() {
+        embedManager.refreshStatusEmbed();
     }
 
     public DiscordManager getDiscordManager() {

@@ -1,6 +1,6 @@
 package com.sh4dowking.discordbot.Discord;
 
-import com.sh4dowking.discordbot.Dictionary;
+import com.util.Dictionary;
 
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
@@ -19,6 +19,7 @@ public class DiscordManager{
 
     public DiscordManager(Dictionary dictionary){
         this.dictionary = dictionary;
+        dictionary.setDiscordManager(this);
     }
 
     private boolean initializeDiscordBot(){
@@ -47,7 +48,8 @@ public class DiscordManager{
             createSetMessageCommand("setleavemessage", "Modify the leave message template"),
             createGetMessageCommand("getleavemessage", "Get the current leave message template"),
             Commands.slash("togglejoinmessage", "Enable or disable join messages").addOptions(createToggleOption("Enable or disable join messages")),
-            Commands.slash("toggleleavemessage", "Enable or disable leave messages").addOptions(createToggleOption("Enable or disable leave messages"))
+            Commands.slash("toggleleavemessage", "Enable or disable leave messages").addOptions(createToggleOption("Enable or disable leave messages")),
+            Commands.slash("togglestatus", "Refreshes the Status Embed")
         ).queue();
     }
 

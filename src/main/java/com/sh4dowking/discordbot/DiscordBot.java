@@ -3,6 +3,7 @@ package com.sh4dowking.discordbot;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.sh4dowking.discordbot.Discord.DiscordManager;
+import com.util.Dictionary;
 
 
 public class DiscordBot extends JavaPlugin {
@@ -15,7 +16,6 @@ public class DiscordBot extends JavaPlugin {
         getLogger().info("DiscordBot plugin is enabled!");
         saveDefaultConfig(); // Create config.yml if id doesn't exists
         this.dictionary = new Dictionary(this);
-        dictionary.setMaxPlayers(getServer().getMaxPlayers());
 
         // Validate configuration keys
         if(!dictionary.hasValidConfigKeys()) {
@@ -36,7 +36,7 @@ public class DiscordBot extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new EventListener(this.dictionary, this.discordManager), this);
         dictionary.setServerStatus(true); // Set server status to online
         discordManager.getDiscordNotifier().updateEmbed();
-        
+
         Thread.setDefaultUncaughtExceptionHandler((thread, throwable) -> {
             discordManager.getDiscordNotifier().serverCrashed(throwable);
         });

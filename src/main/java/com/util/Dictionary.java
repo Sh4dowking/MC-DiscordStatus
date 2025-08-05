@@ -1,22 +1,40 @@
-package com.sh4dowking.discordbot;
+package com.util;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 
+import javax.imageio.ImageIO;
+
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
+
+import com.sh4dowking.discordbot.DiscordBot;
+import com.sh4dowking.discordbot.Discord.DiscordManager;
 
 public class Dictionary {
     private final DiscordBot plugin;
     private HashMap<String, Object> configKeys;
-    private HashSet<Player> players = new HashSet<>();
+    private final HashSet<Player> players = new HashSet<>();
     private int maxPlayers;
     private boolean serverOnline;
+    private String motd;
+    private File serverIconFile;
+    private DiscordManager discordManager;
 
     public Dictionary(DiscordBot plugin) {
         this.plugin = plugin;
         this.configKeys = new HashMap<>();
+        initializeStaticValues();
         initializeConfigKeys();
+    }
+
+    private void initializeStaticValues(){
+        this.maxPlayers = plugin.getServer().getMaxPlayers();
+        this.motd = plugin.getServer().getMotd();
+        configureServerIcon();
     }
 
     private void initializeConfigKeys() {
@@ -72,6 +90,38 @@ public class Dictionary {
         }
     }
 
+    public void setMotd(String motd) {
+        this.motd = motd;
+    }
+
+    public void setDiscordManager(DiscordManager discordManager) {
+        this.discordManager = discordManager;
+    }
+
+    public void configureServerIcon(){
+        try {
+            File iconFile = new File(plugin.getServer().getWorldContainer(), "server-icon.png");
+            if (iconFile.exists()) {
+                // Use the real server icon
+                this.serverIconFile = iconFile;
+            } else {
+                // Use the default icon and save it as a temp file
+                BufferedImage iconImage = DefaultIcon.getImage();
+                if (iconImage != null) {
+                    File tempFile = File.createTempFile("server-icon", ".png");
+                    ImageIO.write(iconImage, "png", tempFile);
+                    tempFile.deleteOnExit();
+                    this.serverIconFile = tempFile;
+                } else {
+                    this.serverIconFile = null;
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            this.serverIconFile = null;
+        }
+    }
+
     // Getters
     public String getString(String key) {
         Object val = configKeys.get(key);
@@ -107,5 +157,17 @@ public class Dictionary {
 
     public boolean isServerOnline() {
         return serverOnline;
+    }
+
+    public String getMotd() {
+        return motd;
+    }
+
+    public File getServerIconFile() {
+        return serverIconFile;
+    }
+
+    public DiscordManager getDiscordManager() {
+        return discordManager;
     }
 }

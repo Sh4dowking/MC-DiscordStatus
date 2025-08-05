@@ -6,27 +6,46 @@ import java.util.stream.Collectors;
 
 import org.bukkit.entity.Player;
 
-import com.sh4dowking.discordbot.Dictionary;
+import com.util.Dictionary;
 
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
+import net.dv8tion.jda.api.utils.FileUpload;
 
 public class EmbedManager {
     private final TextChannel channel;
-    private final String statusMessageID;
+    private String statusMessageID;
     private final Dictionary dictionary;
     private final EmbedBuilder embed;
 
     EmbedManager(DiscordNotifier discordNotifier, TextChannel channel, String statusMessageID) {
         this.dictionary = discordNotifier.getDictionary();
         this.channel = channel;
-        this.statusMessageID = statusMessageID;
         this.embed = new EmbedBuilder();
     }
 
-    public void updateStatusEmbed() {
-        createEmbedMessage();
+    public void refreshStatusEmbed() {
+        createEmbed();
+        if (statusMessageID.equals("")) {
+            sendNewStatusMessage();
+        } else {
+            channel.retrieveMessageById(statusMessageID).queue(
+                message -> {
+                    // Delete the old message and send new one
+                    message.delete().queue(
+                        success -> sendNewStatusMessage(),
+                        failure -> sendNewStatusMessage()
+                    );
+                },
+                failure -> {
+                    sendNewStatusMessage();
+                }
+            );
+        }
+    }
 
+    public void updateStatusEmbed() {
+        createEmbed();
         if(statusMessageID.equals("")) {
             sendNewStatusMessage();
         } else {
@@ -41,10 +60,17 @@ public class EmbedManager {
         }
     }
 
+    private void createEmbed(){
+        createEmbedMessage();
+        statusMessageID = dictionary.getString("statusMessageID");
+    }
+
     private void sendNewStatusMessage() {
-        channel.sendMessageEmbeds(embed.build()).queue(sentMessage -> {
-            dictionary.setValue("statusMessageID", sentMessage.getId());
-        });
+        channel.sendMessageEmbeds(embed.build())
+            .addFiles(FileUpload.fromData(dictionary.getServerIconFile(), "server-icon.png"))
+            .queue(sentMessage -> {
+                dictionary.setValue("statusMessageID", sentMessage.getId());
+            });
     }
 
     private void createEmbedMessage() {
@@ -58,10 +84,9 @@ public class EmbedManager {
         embed.setTimestamp(Instant.now());
     }
 
-    private void serverIsOnline() {
-        embed.setColor(Color.GREEN);
-        embed.setTitle("🟢 Server is Online");
-        embed.setDescription("The Minecraft server is currently online and operational.");
+    private void fillEmbed(){
+        embed.setThumbnail("attachment://server-icon.png");
+        embed.addField("Message of the Day", dictionary.getMotd(), false);
         HashSet<Player> players = dictionary.getOnlinePlayers();
         int maxPlayers = dictionary.getMaxPlayers();
         embed.addField("Players Online", String.valueOf(players.size()), false);
@@ -90,10 +115,18 @@ public class EmbedManager {
         }
     }
 
+    private void serverIsOnline() {
+        embed.setColor(Color.GREEN);
+        embed.setTitle("🟢 Server is Online");
+        embed.setDescription("The Minecraft server is currently online and operational.");
+        fillEmbed();
+    }
+
     private void serverIsOffline() {
         embed.setColor(Color.RED);
         embed.setTitle("🔴 Server is Offline");
-        embed.setDescription("The Minecraft server is currently offline. Please check back later.");
+        embed.setDescription("The Minecraft server is currently offline. Please check again later.");
+        fillEmbed();
     }
 
     public void sendServerCrashMessage(Throwable throwable) {
