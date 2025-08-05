@@ -13,35 +13,7 @@ A lightweight Minecraft plugin that allows you to display and monitor your Minec
 2. Place the `.jar` file into your Minecraft Server’s `plugins` folder.
 3. Start the Minecraft Server.
 4. Open `plugins/MC-DiscordStatus/config.yml` and edit it with your bot and server details (See Configuration below) 
-5. Restart your Minecraft server.
-
----
-
-## ⚙️ Configuration
-
-Example `config.yml`:
-```yaml
-discordToken: "YOUR_BOT_TOKEN"
-discordServerID: "YOUR_DISCORD_SERVER_ID"
-updatesChannelID: "DISCORD_CHANNEL_ID"
-joinMessage: "{player} has joined the Server!"
-leaveMessage: "{player} has left the Server!"
-```
-### Placeholders
-{player} -> Use this to indicate the Username of the Player who joined/left the Minecraft Server.
-
----
-
-## 🖥️ Discord Commands
-
-| Command                    | Description                     | 
-|----------------------------|---------------------------------|
-| /setjoinmessage `<message>`  | Sets a new join message         | 
-| /setleavemessage `<message>` | Sets a new join message         | 
-| /getjoinmessage            | Shows the current join message  | 
-| /getleavemessage           | Shows the current leave message | 
-
----
+5. Restart the Minecraft server.
 
 ## 🛠️ Building from Source
 If you want to compile the plugin yourself:
