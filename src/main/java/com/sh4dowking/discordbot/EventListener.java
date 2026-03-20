@@ -1,10 +1,8 @@
 package com.sh4dowking.discordbot;
-import java.util.HashSet;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
@@ -16,17 +14,14 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 
 public class EventListener implements Listener {
-    private final JDA jda;
     private final TextChannel updatesChannel;
-    private final HashSet<Player> players;
     private final Dictionary dictionary;
     private final DiscordNotifier discordNotifier;
 
     public EventListener(Dictionary dictionary, DiscordManager discordManager) {
         this.dictionary = dictionary;
         this.discordNotifier = discordManager.getDiscordNotifier();
-        this.jda = discordManager.getJda();
-        this.players = new HashSet<>();
+        JDA jda = discordManager.getJda();
         this.updatesChannel = jda.getTextChannelById(dictionary.getString("updatesChannelID"));
     }
 
@@ -36,10 +31,8 @@ public class EventListener implements Listener {
         dictionary.addPlayer(player);
         handlePlayerEvent(
             player,
-            true, // joining
             "sendJoinMessage",
-            "joinMessage",
-            true
+            "joinMessage"
         );
         handleEmbed();
     }
@@ -50,28 +43,13 @@ public class EventListener implements Listener {
         dictionary.removePlayer(player);
         handlePlayerEvent(
             player,
-            false, // leaving
             "sendLeaveMessage",
-            "leaveMessage",
-            true 
+            "leaveMessage"
         );
         handleEmbed();
     }
 
-    @EventHandler
-    public void onPlayerChat(AsyncPlayerChatEvent event) {
-        Player player = event.getPlayer();
-        String message = event.getMessage();
-        String discordMessage = "`" + player.getName() + "` " + message;
-        discordNotifier.sendMessage(updatesChannel, discordMessage);
-    }
-
-    private void handlePlayerEvent(Player player, boolean joining, String toggleKey, String messageKey, boolean updateEmbed) {
-        if(joining){
-            players.add(player);
-        } else {
-            players.remove(player);
-        }
+    private void handlePlayerEvent(Player player, String toggleKey, String messageKey) {
         if(!dictionary.getBoolean(toggleKey)) return;
         String message = dictionary.getString(messageKey).replace("{player}", player.getName());
         discordNotifier.sendMessage(updatesChannel,message);
@@ -80,5 +58,4 @@ public class EventListener implements Listener {
     private void handleEmbed() {
         discordNotifier.updateEmbed();   
     }
-
 }

@@ -21,12 +21,16 @@ public class EmbedManager {
     EmbedManager(DiscordNotifier discordNotifier, TextChannel channel, String statusMessageID) {
         this.dictionary = discordNotifier.getDictionary();
         this.channel = channel;
+        this.statusMessageID = statusMessageID == null ? "" : statusMessageID;
         this.embed = new EmbedBuilder();
     }
 
     public void refreshStatusEmbed() {
+        if (channel == null) {
+            return;
+        }
         createEmbed();
-        if (statusMessageID.equals("")) {
+        if (statusMessageID == null || statusMessageID.isBlank()) {
             sendNewStatusMessage();
         } else {
             channel.retrieveMessageById(statusMessageID).queue(
@@ -45,8 +49,16 @@ public class EmbedManager {
     }
 
     public void updateStatusEmbed() {
+        if (channel == null) {
+            return;
+        }
         createEmbed();
-        if(statusMessageID.equals("")) {
+        if (dictionary.getBoolean("showServerIcon")) {
+            refreshStatusEmbed();
+            return;
+        }
+
+        if(statusMessageID == null || statusMessageID.isBlank()) {
             sendNewStatusMessage();
         } else {
             channel.retrieveMessageById(statusMessageID).queue(
@@ -62,35 +74,57 @@ public class EmbedManager {
 
     private void createEmbed(){
         createEmbedMessage();
-        statusMessageID = dictionary.getString("statusMessageID");
+        String configuredStatusMessageID = dictionary.getString("statusMessageID");
+        statusMessageID = configuredStatusMessageID == null ? "" : configuredStatusMessageID;
     }
 
     private void sendNewStatusMessage() {
-        channel.sendMessageEmbeds(embed.build())
-            .addFiles(FileUpload.fromData(dictionary.getServerIconFile(), "server-icon.png"))
-            .queue(sentMessage -> {
-                dictionary.setValue("statusMessageID", sentMessage.getId());
-            });
+        if(dictionary.getBoolean("showServerIcon") && dictionary.getServerIconFile() != null) {
+            channel.sendMessageEmbeds(embed.build())
+                .addFiles(FileUpload.fromData(dictionary.getServerIconFile(), "server-icon.png"))
+                .queue(sentMessage -> {
+                    dictionary.setValue("statusMessageID", sentMessage.getId());
+                });
+            return;
+        }
+
+        channel.sendMessageEmbeds(embed.build()).queue(sentMessage -> {
+            dictionary.setValue("statusMessageID", sentMessage.getId());
+        });
     }
 
     private void createEmbedMessage() {
         embed.clear();
-        embed.setThumbnail("attachment://server-icon.png");
-        embed.addField("Message of the Day", dictionary.getMotd(), false);
+        if(dictionary.getBoolean("showServerIcon") && dictionary.getServerIconFile() != null) {
+            embed.setThumbnail("attachment://server-icon.png");
+        }
+        if(dictionary.getBoolean("showMotd")) {
+            embed.addField("Message of the Day", dictionary.getMotd(), false);
+        }
         if(dictionary.isServerOnline()) {
-            embed.setColor(Color.GREEN);
-            embed.setTitle("🟢 Server is Online");
-            embed.setDescription("The Minecraft server is currently online and operational.");
+            embed.setColor(getConfiguredColor("statusColorOnline", Color.GREEN));
+            embed.setTitle(dictionary.getString("statusMessageTitleOnline"));
+            if(dictionary.getBoolean("showDescription")) {
+                embed.setDescription(dictionary.getString("statusMessageDescriptionOnline"));
+            }
             HashSet<Player> players = dictionary.getOnlinePlayers();
             int maxPlayers = dictionary.getMaxPlayers();
-            embed.addField("Players Online", String.valueOf(players.size())+"/"+String.valueOf(maxPlayers), false);
-            createOnlinePlayerList();
+            if(dictionary.getBoolean("showPlayersOnline")) {
+                embed.addField("Players Online", String.valueOf(players.size())+"/"+String.valueOf(maxPlayers), false);
+            }
+            if(dictionary.getBoolean("showPlayerList")) {
+                createOnlinePlayerList();
+            }
         } else {
-            embed.setColor(Color.RED);
-            embed.setTitle("🔴 Server is Offline");
-            embed.setDescription("The Minecraft server is currently offline. Please check again later.");
+            embed.setColor(getConfiguredColor("statusColorOffline", Color.RED));
+            embed.setTitle(dictionary.getString("statusMessageTitleOffline"));
+            if(dictionary.getBoolean("showDescription")) {
+                embed.setDescription(dictionary.getString("statusMessageDescriptionOffline"));
+            }
         }
-        embed.addField("Server Version", "`"+dictionary.getServerVersion()+"`", false);
+        if(dictionary.getBoolean("showServerVersion")) {
+            embed.addField("Server Version", "`"+dictionary.getServerVersion()+"`", false);
+        }
         embed.setFooter("Status Updated");
         embed.setTimestamp(Instant.now());
     }
@@ -121,5 +155,18 @@ public class EmbedManager {
         embed.setTitle("❌ Server Crashed");
         embed.setDescription("The Minecraft server has crashed. Please investigate the issue.");
         embed.addField("Error", throwable.getClass().getName() + ": " + throwable.getMessage(), false);
+    }
+
+    private Color getConfiguredColor(String key, Color fallback) {
+        String colorValue = dictionary.getString(key);
+        if (colorValue == null || colorValue.isBlank()) {
+            return fallback;
+        }
+
+        try {
+            return Color.decode(colorValue);
+        } catch (NumberFormatException e) {
+            return fallback;
+        }
     }
 }   

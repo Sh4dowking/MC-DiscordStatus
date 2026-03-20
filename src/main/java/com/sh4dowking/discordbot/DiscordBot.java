@@ -1,5 +1,8 @@
 package com.sh4dowking.discordbot;
 
+import java.util.logging.Logger;
+
+import org.bukkit.Server;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.sh4dowking.discordbot.Discord.DiscordManager;
@@ -12,30 +15,34 @@ public class DiscordBot extends JavaPlugin {
     
     @Override
     public void onEnable() {
+        Logger logger = getLogger();
+        Server server = getServer();
+
         // Plugin startup logic
-        getLogger().info("DiscordBot plugin is enabled!");
-        saveDefaultConfig(); // Create config.yml if id doesn't exists
+        logger.info("DiscordBot plugin is enabled!");
+        saveDefaultConfig(); // Create config.yml if it doesn't exists
         this.dictionary = new Dictionary(this);
 
         // Validate configuration keys
         if(!dictionary.hasValidConfigKeys()) {
-            getLogger().severe("Configuration validation failed. Please check your config.yml.");
-            getServer().getPluginManager().disablePlugin(this);
+            logger.severe("Configuration validation failed. Please check your config.yml.");
+            server.getPluginManager().disablePlugin(this);
             return;
         }
 
         // Initialize Discord Bot
         this.discordManager = new DiscordManager(dictionary);
+        dictionary.setDiscordManager(discordManager);
         if(!discordManager.discordSetupWasSuccessful()) {
-            getLogger().severe("Discord bot initialization failed. Please check your Discord token.");
-            getServer().getPluginManager().disablePlugin(this);
+            logger.severe("Discord bot initialization failed. Please check your Discord token.");
+            server.getPluginManager().disablePlugin(this);
             return;
         }
         
         // Intialize Minecraft Event Listener
-        getServer().getPluginManager().registerEvents(new EventListener(this.dictionary, this.discordManager), this);
+        server.getPluginManager().registerEvents(new EventListener(this.dictionary, this.discordManager), this);
         dictionary.setServerStatus(true);
-        discordManager.getDiscordNotifier().updateEmbed();
+        discordManager.getDiscordNotifier().refreshEmbed();
 
         // Server Crash Handler
         Thread.setDefaultUncaughtExceptionHandler((thread, throwable) -> {
@@ -45,9 +52,15 @@ public class DiscordBot extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        // Set server status to offline
-        dictionary.setServerStatus(false);
-        discordManager.getDiscordNotifier().updateEmbed();
+        if (dictionary != null) {
+            dictionary.setServerStatus(false);
+        }
+        if (discordManager != null) {
+            if (discordManager.getDiscordNotifier() != null) {
+                discordManager.getDiscordNotifier().updateEmbed();
+            }
+            discordManager.shutdown();
+        }
         getLogger().info("DiscordBot plugin is disabled!");
     }
 }

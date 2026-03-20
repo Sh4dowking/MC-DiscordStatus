@@ -10,14 +10,11 @@ public class DiscordNotifier {
     private final DiscordManager discordManager;
     private final JDA jda;
     private final EmbedManager embedManager;
-    private final TextChannel updatesChannel;
 
     public DiscordNotifier(DiscordManager discordManager, Dictionary dictionary) {
         this.discordManager = discordManager;
         this.jda = discordManager.getJda();
         this.dictionary = dictionary;
-        String updatesChannelID = dictionary.getString("updatesChannelID");
-        this.updatesChannel = jda.getTextChannelById(updatesChannelID);
         String statusChannelID = dictionary.getString("statusChannelID");
         TextChannel statusChannel = jda.getTextChannelById(statusChannelID);
         String statusMessageID = dictionary.getString("statusMessageID");

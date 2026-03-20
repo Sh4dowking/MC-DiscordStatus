@@ -86,7 +86,7 @@
                 <artifactId>maven-jar-plugin</artifactId>
                 <version>3.2.0</version>
                 <configuration>
-                    <outputDirectory>/home/ubuntu/MinecraftServer/TestingServer_Paper_1_21_8/plugins</outputDirectory>
+                    <outputDirectory>/home/ubuntu/MinecraftServer/Paper_1_21_11/plugins</outputDirectory>
                 </configuration>
             </plugin>
         </plugins>

@@ -8,11 +8,12 @@ import java.util.HashSet;
 
 import javax.imageio.ImageIO;
 
+import org.bukkit.Server;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
-import com.sh4dowking.discordbot.DiscordBot;
 import com.sh4dowking.discordbot.Discord.DiscordManager;
+import com.sh4dowking.discordbot.DiscordBot;
 
 public class Dictionary {
     private final DiscordBot plugin;
@@ -33,9 +34,10 @@ public class Dictionary {
     }
 
     private void initializeStaticValues(){
-        this.maxPlayers = plugin.getServer().getMaxPlayers();
-        this.motd = plugin.getServer().getMotd();
-        this.version = plugin.getServer().getMinecraftVersion();
+        Server server = plugin.getServer();
+        this.maxPlayers = server.getMaxPlayers();
+        this.motd = server.getMotd();
+        this.version = server.getMinecraftVersion();
         configureServerIcon();
     }
 
@@ -44,19 +46,22 @@ public class Dictionary {
         HashSet<String> defaultKeys = new HashSet<>(Arrays.asList(
             "discordToken", "discordServerID", "updatesChannelID", "joinMessage", 
             "leaveMessage", "statusChannelID", "statusMessageID", "sendJoinMessage", 
-            "sendLeaveMessage"
+            "sendLeaveMessage", "statusMessageTitleOnline", "statusMessageDescriptionOnline",
+            "statusColorOnline", "statusMessageTitleOffline", "statusMessageDescriptionOffline", "statusColorOffline",
+            "showDescription", "showServerIcon",
+            "showMotd", "showPlayersOnline", "showPlayerList", "showServerVersion"
         ));
         for(String key : defaultKeys) {
-            configKeys.put(key, "");
+            configKeys.put(key, null);
         }
     }
 
     private boolean getValidConfigKeys() {
         FileConfiguration configFile = plugin.getConfig();
-        HashSet<String> exceptionKeys = new HashSet<>(Arrays.asList("embedMessageID"));
+        HashSet<String> exceptionKeys = new HashSet<>(Arrays.asList("statusMessageID"));
         for(String key : configKeys.keySet()) {
             if(exceptionKeys.contains(key)) {
-                configKeys.put(key,"");
+                configKeys.put(key,null);
                 continue;
             } else if (!configFile.contains(key) || configFile.getString(key) == null) {
                 return false;

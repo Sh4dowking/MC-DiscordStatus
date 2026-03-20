@@ -3,7 +3,22 @@ discordServerID: "YOUR_DISCORD_SERVER_ID"
 updatesChannelID: "YOUR_DISCORD_CHANNEL_ID"
 statusChannelID: "YOUR_STATUS_CHANNEL_ID"
 statusMessageID: "YOUR_STATUS_MESSAGE_ID"
+
 sendJoinMessage: true
 sendLeaveMessage: true
 joinMessage: "`{player}` joined the Server!"
 leaveMessage: "`{player}` left the Server!"
+
+statusMessageTitleOnline: "🟢 Server is Online"
+statusMessageDescriptionOnline: "The Minecraft server is currently online and operational."
+statusColorOnline: "#00FF00"
+statusMessageTitleOffline: "🔴 Server is Offline"
+statusMessageDescriptionOffline: "The Minecraft server is currently offline, please check again later."
+statusColorOffline: "#FF0000"
+
+showDescription: true
+showServerIcon: true
+showMotd: true
+showPlayersOnline: true
+showPlayerList: true
+showServerVersion: true
