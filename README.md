@@ -17,12 +17,12 @@ A lightweight Minecraft plugin that allows you to display and monitor your Minec
 
 ## Installation
 
-### 1. Install the plugin jar
+### Install the plugin jar
 1. Download the latest release from [Releases](https://github.com/Sh4dowking/MC-DiscordStatus/releases).
 2. Place the `DiscordStatus.jar` file in your server `plugins` folder.
 3. Start the server once to generate `plugins/DiscordStatus/config.yml`.
 
-### 2. Create a Discord application and bot
+### Create a Discord application and bot
 1. Open the Discord Developer Portal: <https://discord.com/developers/applications>
 2. Click New Application and enter a name (for example `Status Bot`).
 3. You should now be on a page where you can configure your Application, if not click on the Application you just created.
@@ -40,7 +40,7 @@ A lightweight Minecraft plugin that allows you to display and monitor your Minec
 	- `Manage Messages` (used when refreshing/replacing status messages)
 9. On the very bottom of the page a URL will be generated. Open the generated URL and invite the bot to your server.
 
-### 3. Enable Developer Mode in Discord (for copying IDs)
+### Enable Developer Mode in Discord (for copying IDs)
 1. Open Discord Settings.
 2. Go to Advanced.
 3. Enable Developer Mode.
@@ -57,13 +57,12 @@ After Developer Mode is enabled, right-click and use Copy Server ID / Copy Chann
 
 Tip: `updatesChannelID` and `statusChannelID` can be the same channel if you prefer.
 
-### 4. Final Steps
+### Final Steps
 1. Configure the rest of the `plugins/DiscordStatus/config.yml` (A default file template can be found below).
 2. Restart the Minecraft Server for the changes to take effect.
 3. Enjoy the Minecraft Plugin :)
 
 ## Configuration
-
 Default `config.yml`:
 
 ```yaml
