@@ -58,10 +58,10 @@ public class Dictionary {
 
     private boolean getValidConfigKeys() {
         FileConfiguration configFile = plugin.getConfig();
-        HashSet<String> exceptionKeys = new HashSet<>(Arrays.asList("statusMessageID"));
         for(String key : configKeys.keySet()) {
-            if(exceptionKeys.contains(key)) {
-                configKeys.put(key,null);
+            if ("statusMessageID".equals(key)) {
+                String statusMessageID = configFile.getString(key);
+                configKeys.put(key, statusMessageID == null ? "" : statusMessageID);
                 continue;
             } else if (!configFile.contains(key) || configFile.getString(key) == null) {
                 return false;

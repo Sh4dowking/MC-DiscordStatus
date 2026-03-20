@@ -42,7 +42,7 @@ public class DiscordStatus extends JavaPlugin {
         // Intialize Minecraft Event Listener
         server.getPluginManager().registerEvents(new EventListener(this.dictionary, this.discordManager), this);
         dictionary.setServerStatus(true);
-        discordManager.getDiscordNotifier().refreshEmbed();
+        discordManager.getDiscordNotifier().updateEmbed();
 
         // Server Crash Handler
         Thread.setDefaultUncaughtExceptionHandler((thread, throwable) -> {

@@ -1,5 +1,6 @@
 package com.sh4dowking.discordstatus.Discord;
 import java.awt.Color;
+import java.io.File;
 import java.time.Instant;
 import java.util.HashSet;
 import java.util.stream.Collectors;
@@ -17,12 +18,15 @@ public class EmbedManager {
     private String statusMessageID;
     private final Dictionary dictionary;
     private final EmbedBuilder embed;
+    private String lastIconPath;
+    private long lastIconModified;
 
     EmbedManager(DiscordNotifier discordNotifier, TextChannel channel, String statusMessageID) {
         this.dictionary = discordNotifier.getDictionary();
         this.channel = channel;
         this.statusMessageID = statusMessageID == null ? "" : statusMessageID;
         this.embed = new EmbedBuilder();
+        cacheCurrentIconSignature();
     }
 
     public void refreshStatusEmbed() {
@@ -53,7 +57,7 @@ public class EmbedManager {
             return;
         }
         createEmbed();
-        if (dictionary.getBoolean("showServerIcon")) {
+        if (dictionary.getBoolean("showServerIcon") && hasServerIconChanged()) {
             refreshStatusEmbed();
             return;
         }
@@ -73,29 +77,34 @@ public class EmbedManager {
     }
 
     private void createEmbed(){
+        dictionary.configureServerIcon();
         createEmbedMessage();
         String configuredStatusMessageID = dictionary.getString("statusMessageID");
         statusMessageID = configuredStatusMessageID == null ? "" : configuredStatusMessageID;
     }
 
     private void sendNewStatusMessage() {
-        if(dictionary.getBoolean("showServerIcon") && dictionary.getServerIconFile() != null) {
+        File iconFile = dictionary.getServerIconFile();
+        if(dictionary.getBoolean("showServerIcon") && iconFile != null && iconFile.exists()) {
             channel.sendMessageEmbeds(embed.build())
-                .addFiles(FileUpload.fromData(dictionary.getServerIconFile(), "server-icon.png"))
+                .addFiles(FileUpload.fromData(iconFile, "server-icon.png"))
                 .queue(sentMessage -> {
                     dictionary.setValue("statusMessageID", sentMessage.getId());
+                    cacheCurrentIconSignature();
                 });
             return;
         }
 
         channel.sendMessageEmbeds(embed.build()).queue(sentMessage -> {
             dictionary.setValue("statusMessageID", sentMessage.getId());
+            cacheCurrentIconSignature();
         });
     }
 
     private void createEmbedMessage() {
         embed.clear();
-        if(dictionary.getBoolean("showServerIcon") && dictionary.getServerIconFile() != null) {
+        File iconFile = dictionary.getServerIconFile();
+        if(dictionary.getBoolean("showServerIcon") && iconFile != null && iconFile.exists()) {
             embed.setThumbnail("attachment://server-icon.png");
         }
         if(dictionary.getBoolean("showMotd")) {
@@ -168,5 +177,33 @@ public class EmbedManager {
         } catch (NumberFormatException e) {
             return fallback;
         }
+    }
+
+    private boolean hasServerIconChanged() {
+        File iconFile = dictionary.getServerIconFile();
+        if (iconFile == null) {
+            return false;
+        }
+
+        String currentPath = iconFile.getAbsolutePath();
+        long currentModified = iconFile.lastModified();
+        boolean changed = !currentPath.equals(lastIconPath) || currentModified != lastIconModified;
+        if (changed) {
+            lastIconPath = currentPath;
+            lastIconModified = currentModified;
+        }
+        return changed;
+    }
+
+    private void cacheCurrentIconSignature() {
+        File iconFile = dictionary.getServerIconFile();
+        if (iconFile == null) {
+            lastIconPath = "";
+            lastIconModified = -1L;
+            return;
+        }
+
+        lastIconPath = iconFile.getAbsolutePath();
+        lastIconModified = iconFile.lastModified();
     }
 }   
