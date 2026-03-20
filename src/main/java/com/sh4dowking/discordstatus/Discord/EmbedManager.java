@@ -10,6 +10,7 @@ import org.bukkit.entity.Player;
 import com.util.Dictionary;
 
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.utils.FileUpload;
 
@@ -76,6 +77,29 @@ public class EmbedManager {
         }
     }
 
+    public void updateStatusEmbedBlocking() {
+        if (channel == null) {
+            return;
+        }
+
+        createEmbed();
+        if (dictionary.getBoolean("showServerIcon") && hasServerIconChanged()) {
+            refreshStatusEmbedBlocking();
+            return;
+        }
+
+        if (statusMessageID == null || statusMessageID.isBlank()) {
+            sendNewStatusMessageBlocking();
+            return;
+        }
+
+        try {
+            channel.retrieveMessageById(statusMessageID).complete().editMessageEmbeds(embed.build()).complete();
+        } catch (Exception ignored) {
+            sendNewStatusMessageBlocking();
+        }
+    }
+
     private void createEmbed(){
         dictionary.configureServerIcon();
         createEmbedMessage();
@@ -99,6 +123,36 @@ public class EmbedManager {
             dictionary.setValue("statusMessageID", sentMessage.getId());
             cacheCurrentIconSignature();
         });
+    }
+
+    private void sendNewStatusMessageBlocking() {
+        File iconFile = dictionary.getServerIconFile();
+        Message sentMessage;
+
+        if (dictionary.getBoolean("showServerIcon") && iconFile != null && iconFile.exists()) {
+            sentMessage = channel.sendMessageEmbeds(embed.build())
+                .addFiles(FileUpload.fromData(iconFile, "server-icon.png"))
+                .complete();
+        } else {
+            sentMessage = channel.sendMessageEmbeds(embed.build()).complete();
+        }
+
+        dictionary.setValue("statusMessageID", sentMessage.getId());
+        cacheCurrentIconSignature();
+    }
+
+    private void refreshStatusEmbedBlocking() {
+        if (statusMessageID == null || statusMessageID.isBlank()) {
+            sendNewStatusMessageBlocking();
+            return;
+        }
+
+        try {
+            channel.retrieveMessageById(statusMessageID).complete().delete().complete();
+        } catch (Exception ignored) {
+            // Ignore and still create the replacement status message.
+        }
+        sendNewStatusMessageBlocking();
     }
 
     private void createEmbedMessage() {

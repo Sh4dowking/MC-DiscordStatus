@@ -22,14 +22,30 @@ public class DiscordNotifier {
     }
 
     public void sendMessage(TextChannel channel, String message){
+        if (discordManager.isShuttingDown() || channel == null) {
+            return;
+        }
         channel.sendMessage(message).queue();
     }
 
     public void updateEmbed() {
+        if (discordManager.isShuttingDown()) {
+            return;
+        }
         embedManager.updateStatusEmbed();
     }
 
+    public void updateEmbedBlocking() {
+        if (discordManager.isShuttingDown()) {
+            return;
+        }
+        embedManager.updateStatusEmbedBlocking();
+    }
+
     public void refreshEmbed() {
+        if (discordManager.isShuttingDown()) {
+            return;
+        }
         embedManager.refreshStatusEmbed();
     }
 
@@ -42,6 +58,9 @@ public class DiscordNotifier {
     }
 
     public void serverCrashed(Throwable throwable) {
+        if (discordManager.isShuttingDown()) {
+            return;
+        }
         embedManager.sendServerCrashMessage(throwable);
     }
 }

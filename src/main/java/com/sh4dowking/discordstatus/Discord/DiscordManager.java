@@ -1,5 +1,7 @@
 package com.sh4dowking.discordstatus.Discord;
 
+import java.util.concurrent.TimeUnit;
+
 import com.util.Dictionary;
 
 import net.dv8tion.jda.api.JDA;
@@ -15,6 +17,7 @@ public class DiscordManager{
     private JDA jda;
     private Guild guild;
     private DiscordNotifier discordNotifier;
+    private volatile boolean shuttingDown;
 
 
     public DiscordManager(Dictionary dictionary){
@@ -106,8 +109,26 @@ public class DiscordManager{
     }
 
     public void shutdown() {
+        shuttingDown = true;
         if (jda != null) {
-            jda.shutdownNow();
+            try {
+                jda.shutdown();
+                boolean stoppedGracefully = jda.awaitShutdown(10, TimeUnit.SECONDS);
+                if (!stoppedGracefully) {
+                    jda.shutdownNow();
+                    boolean forcedStopped = jda.awaitShutdown(5, TimeUnit.SECONDS);
+                    if (!forcedStopped) {
+                        // Nothing else to do here, plugin disable continues.
+                    }
+                }
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                jda.shutdownNow();
+            }
         }
+    }
+
+    public boolean isShuttingDown() {
+        return shuttingDown;
     }
 }

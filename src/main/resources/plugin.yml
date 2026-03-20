@@ -1,4 +1,4 @@
 name: DiscordStatus
-version: 1.1.0
+version: 1.2.1
 main: com.sh4dowking.discordstatus.DiscordStatus
 api-version: 1.21

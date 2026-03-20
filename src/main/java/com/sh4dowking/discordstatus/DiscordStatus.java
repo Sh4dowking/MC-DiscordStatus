@@ -57,7 +57,7 @@ public class DiscordStatus extends JavaPlugin {
         }
         if (discordManager != null) {
             if (discordManager.getDiscordNotifier() != null) {
-                discordManager.getDiscordNotifier().updateEmbed();
+                discordManager.getDiscordNotifier().updateEmbedBlocking();
             }
             discordManager.shutdown();
         }
