@@ -12,11 +12,11 @@ import org.bukkit.Server;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
-import com.sh4dowking.discordbot.Discord.DiscordManager;
-import com.sh4dowking.discordbot.DiscordBot;
+import com.sh4dowking.discordstatus.Discord.DiscordManager;
+import com.sh4dowking.discordstatus.DiscordStatus;
 
 public class Dictionary {
-    private final DiscordBot plugin;
+    private final DiscordStatus plugin;
     private HashMap<String, Object> configKeys;
     private final HashSet<Player> players = new HashSet<>();
     private int maxPlayers;
@@ -26,7 +26,7 @@ public class Dictionary {
     private DiscordManager discordManager;
     private String version;
 
-    public Dictionary(DiscordBot plugin) {
+    public Dictionary(DiscordStatus plugin) {
         this.plugin = plugin;
         this.configKeys = new HashMap<>();
         initializeStaticValues();

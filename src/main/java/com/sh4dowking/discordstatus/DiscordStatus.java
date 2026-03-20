@@ -1,15 +1,15 @@
-package com.sh4dowking.discordbot;
+package com.sh4dowking.discordstatus;
 
 import java.util.logging.Logger;
 
 import org.bukkit.Server;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.sh4dowking.discordbot.Discord.DiscordManager;
+import com.sh4dowking.discordstatus.Discord.DiscordManager;
 import com.util.Dictionary;
 
 
-public class DiscordBot extends JavaPlugin {
+public class DiscordStatus extends JavaPlugin {
     private Dictionary dictionary;
     private DiscordManager discordManager;
     
@@ -19,7 +19,7 @@ public class DiscordBot extends JavaPlugin {
         Server server = getServer();
 
         // Plugin startup logic
-        logger.info("DiscordBot plugin is enabled!");
+        logger.info("DiscordStatus plugin is enabled!");
         saveDefaultConfig(); // Create config.yml if it doesn't exists
         this.dictionary = new Dictionary(this);
 
@@ -61,6 +61,6 @@ public class DiscordBot extends JavaPlugin {
             }
             discordManager.shutdown();
         }
-        getLogger().info("DiscordBot plugin is disabled!");
+        getLogger().info("DiscordStatus plugin is disabled!");
     }
 }

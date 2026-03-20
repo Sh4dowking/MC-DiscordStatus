@@ -1,4 +1,4 @@
-package com.sh4dowking.discordbot;
+package com.sh4dowking.discordstatus;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -6,8 +6,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
-import com.sh4dowking.discordbot.Discord.DiscordManager;
-import com.sh4dowking.discordbot.Discord.DiscordNotifier;
+import com.sh4dowking.discordstatus.Discord.DiscordManager;
+import com.sh4dowking.discordstatus.Discord.DiscordNotifier;
 import com.util.Dictionary;
 
 import net.dv8tion.jda.api.JDA;

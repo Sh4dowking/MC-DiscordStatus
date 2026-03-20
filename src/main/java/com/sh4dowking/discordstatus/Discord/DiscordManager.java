@@ -1,4 +1,4 @@
-package com.sh4dowking.discordbot.Discord;
+package com.sh4dowking.discordstatus.Discord;
 
 import com.util.Dictionary;
 
