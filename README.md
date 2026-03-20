@@ -55,8 +55,12 @@ After Developer Mode is enabled, right-click and use Copy Server ID / Copy Chann
   - you can leave it empty and let the plugin create/store it automatically
   - if needed later, right-click the status message > Copy Message ID
 
-Tip:
-- `updatesChannelID` and `statusChannelID` can be the same channel if you prefer.
+Tip: `updatesChannelID` and `statusChannelID` can be the same channel if you prefer.
+
+### 4. Final Steps
+1. Configure the rest of the `plugins/DiscordStatus/config.yml` (A default file template can be found below).
+2. Restart the Minecraft Server for the changes to take effect.
+3. Enjoy the Minecraft Plugin :)
 
 ## Configuration
 
