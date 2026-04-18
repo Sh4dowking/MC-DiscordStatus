@@ -25,11 +25,13 @@ public class DiscordCommandListener extends ListenerAdapter {
                 if (newMessage == null) return;
                 setMessage(key, newMessage, event);
             }
-            case "setstatustitleon", "setstatusdescon", "setstatustitleoff", "setstatusdescoff" -> {
+            case "setstatustitleon", "setstatusdescon", "setstatustitleoff", "setstatusdescoff", 
+                 "setphrasemotd", "setphraseonline", "setphraseplist", "setphrasenoplayers", "setphraseversion", "setphrasestatus" -> {
                 String key = getStatusStringKey(eventName);
                 String newMessage = getRequiredStringOption(event, "message");
                 if (newMessage == null) return;
                 setMessage(key, newMessage, event);
+                discordManager.getDiscordNotifier().updateEmbed();
             }
             case "setstatuscoloron", "setstatuscoloroff" -> {
                 String key = getStatusColorKey(eventName);
@@ -41,7 +43,8 @@ public class DiscordCommandListener extends ListenerAdapter {
                 String key = eventName.equals("getjoinmessage") ? "joinMessage" : "leaveMessage";
                 getMessage(key, event);
             }
-            case "getstatustitleon", "getstatusdescon", "getstatustitleoff", "getstatusdescoff" -> {
+            case "getstatustitleon", "getstatusdescon", "getstatustitleoff", "getstatusdescoff",
+                 "getphrasemotd", "getphraseonline", "getphraseplist", "getphrasenoplayers", "getphraseversion", "getphrasestatus" -> {
                 String key = getStatusStringKey(eventName);
                 getMessage(key, event);
             }
@@ -117,6 +120,12 @@ public class DiscordCommandListener extends ListenerAdapter {
             case "setstatusdescon", "getstatusdescon" -> "statusMessageDescriptionOnline";
             case "setstatustitleoff", "getstatustitleoff" -> "statusMessageTitleOffline";
             case "setstatusdescoff", "getstatusdescoff" -> "statusMessageDescriptionOffline";
+            case "setphrasemotd", "getphrasemotd" -> "phraseMessageOfTheDay";
+            case "setphraseonline", "getphraseonline" -> "phrasePlayersOnline";
+            case "setphraseplist", "getphraseplist" -> "phrasePlayerList";
+            case "setphrasenoplayers", "getphrasenoplayers" -> "phraseNoPlayersOnline";
+            case "setphraseversion", "getphraseversion" -> "phraseServerVersion";
+            case "setphrasestatus", "getphrasestatus" -> "phraseStatusUpdated";
             default -> "";
         };
     }

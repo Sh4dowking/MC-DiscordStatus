@@ -75,6 +75,18 @@ public class DiscordManager{
             Commands.slash("toggleshowonline", "Enable or disable the Players Online field").addOptions(createToggleOption("Enable or disable the Players Online field")),
             Commands.slash("toggleshowplist", "Enable or disable the Player List field").addOptions(createToggleOption("Enable or disable the Player List field")),
             Commands.slash("toggleshowversion", "Enable or disable the Server Version field").addOptions(createToggleOption("Enable or disable the Server Version field")),
+            createSetStringCommand("setphrasemotd", "Set the Message of the Day phrase"),
+            createGetMessageCommand("getphrasemotd", "Get the Message of the Day phrase"),
+            createSetStringCommand("setphraseonline", "Set the Players Online phrase"),
+            createGetMessageCommand("getphraseonline", "Get the Players Online phrase"),
+            createSetStringCommand("setphraseplist", "Set the Player List phrase"),
+            createGetMessageCommand("getphraseplist", "Get the Player List phrase"),
+            createSetStringCommand("setphrasenoplayers", "Set the No Players Online phrase"),
+            createGetMessageCommand("getphrasenoplayers", "Get the No Players Online phrase"),
+            createSetStringCommand("setphraseversion", "Set the Server Version phrase"),
+            createGetMessageCommand("getphraseversion", "Get the Server Version phrase"),
+            createSetStringCommand("setphrasestatus", "Set the Status Updated phrase"),
+            createGetMessageCommand("getphrasestatus", "Get the Status Updated phrase"),
             Commands.slash("togglestatus", "Refreshes the Status Embed")
         ).queue();
     }
