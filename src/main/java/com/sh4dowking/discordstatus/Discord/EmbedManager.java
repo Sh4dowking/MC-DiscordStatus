@@ -162,7 +162,7 @@ public class EmbedManager {
             embed.setThumbnail("attachment://server-icon.png");
         }
         if(dictionary.getBoolean("showMotd")) {
-            embed.addField("Message of the Day", dictionary.getMotd(), false);
+            embed.addField(dictionary.getString("phraseMessageOfTheDay"), dictionary.getMotd(), false);
         }
         if(dictionary.isServerOnline()) {
             embed.setColor(getConfiguredColor("statusColorOnline", Color.GREEN));
@@ -173,7 +173,7 @@ public class EmbedManager {
             HashSet<Player> players = dictionary.getOnlinePlayers();
             int maxPlayers = dictionary.getMaxPlayers();
             if(dictionary.getBoolean("showPlayersOnline")) {
-                embed.addField("Players Online", String.valueOf(players.size())+"/"+String.valueOf(maxPlayers), false);
+                embed.addField(dictionary.getString("phrasePlayersOnline"), String.valueOf(players.size())+"/"+String.valueOf(maxPlayers), false);
             }
             if(dictionary.getBoolean("showPlayerList")) {
                 createOnlinePlayerList();
@@ -186,9 +186,9 @@ public class EmbedManager {
             }
         }
         if(dictionary.getBoolean("showServerVersion")) {
-            embed.addField("Server Version", "`"+dictionary.getServerVersion()+"`", false);
+            embed.addField(dictionary.getString("phraseServerVersion"), "`"+dictionary.getServerVersion()+"`", false);
         }
-        embed.setFooter("Status Updated");
+        embed.setFooter(dictionary.getString("phraseStatusUpdated"));
         embed.setTimestamp(Instant.now());
     }
     
@@ -199,7 +199,7 @@ public class EmbedManager {
         	playerNames.add(p.getName());
         }
         if (playerNames.isEmpty()) {
-            embed.addField("Player List", "No players online.", false);
+            embed.addField(dictionary.getString("phrasePlayerList"), dictionary.getString("phraseNoPlayersOnline"), false);
         } else {
             String playerList = playerNames.stream()
                 .limit(20)
@@ -209,7 +209,7 @@ public class EmbedManager {
             if (playerNames.size() > 20) {
                 playerList += "\n...and " + (playerNames.size() - 20) + " more";
             }
-            embed.addField("Player List", playerList, false);
+            embed.addField(dictionary.getString("phrasePlayerList"), playerList, false);
         }
     }
 

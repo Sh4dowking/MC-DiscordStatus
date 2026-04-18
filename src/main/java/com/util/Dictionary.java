@@ -49,7 +49,9 @@ public class Dictionary {
             "sendLeaveMessage", "statusMessageTitleOnline", "statusMessageDescriptionOnline",
             "statusColorOnline", "statusMessageTitleOffline", "statusMessageDescriptionOffline", "statusColorOffline",
             "showDescription", "showServerIcon",
-            "showMotd", "showPlayersOnline", "showPlayerList", "showServerVersion"
+            "showMotd", "showPlayersOnline", "showPlayerList", "showServerVersion",
+            "phraseMessageOfTheDay", "phrasePlayersOnline", "phrasePlayerList", 
+            "phraseNoPlayersOnline", "phraseServerVersion", "phraseStatusUpdated"
         ));
         for(String key : defaultKeys) {
             configKeys.put(key, null);

@@ -91,6 +91,13 @@ showMotd: true
 showPlayersOnline: true
 showPlayerList: true
 showServerVersion: true
+
+phraseMessageOfTheDay: "Message of the Day"
+phrasePlayersOnline: "Players Online"
+phrasePlayerList: "Player List"
+phraseNoPlayersOnline: "No players online."
+phraseServerVersion: "Server Version"
+phraseStatusUpdated: "Status Updated"
 ```
 
 Notes:
